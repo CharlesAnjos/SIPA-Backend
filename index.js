@@ -1,4 +1,7 @@
-const routes = require('./routes/routes');
+const premioroutes = require('./routes/premioroutes');
+const autorroutes = require('./routes/autorroutes');
+const avaliadorroutes = require('./routes/avaliadorroutes');
+const projetoroutes = require('./routes/projetoroutes');
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require("body-parser");
@@ -18,7 +21,10 @@ database.once('connected', () => {
 const app = express();
 
 app.use(express.json());
-app.use('/api', routes);
+app.use('/api', premioroutes);
+app.use('/api', autorroutes);
+app.use('/api', avaliadorroutes);
+app.use('/api', projetoroutes);
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.listen(3000, () => {
