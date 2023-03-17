@@ -27,11 +27,11 @@ Como já tenho bastante experiência com BDs relacionais, decidi fazer este proj
 
 Docker MongoDB
 
-    # docker run --name backend-ntdw -d -p 27017:27017 mongo
+### 4.1 Instalação
+    # docker run -d -p 27017:27017 --name backend-ntdw mongo:latest
 
-- desisti de rodar um servidor mongodb no docker por problemas de conexão
-- desisti de rodar um servidor mongodb localmente pois tive problemas ao tentar conectar nele
-- foi mais fácil usar o MongoDB Atlas e hostear o serviço de BD na nuvem.
+### 4.2 Execução
+    # docker start backend-ntdw
 
 ## 5. Fazer o resto da implementação
 - Estou usando o tutorial localizado em https://www.freecodecamp.org/news/build-a-restful-api-using-node-express-and-mongodb/ para o resto do trabalho
