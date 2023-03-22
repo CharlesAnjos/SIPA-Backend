@@ -1,12 +1,12 @@
 const express = require('express');
 const router = express.Router();
-const Model = require("../models/model");
+const Projeto = require("../models/Projeto");
 
 module.exports = router;
 
 //Post Method
 router.post('/post', async(req, res) => {
-    const data = new Model({
+    const data = new Projeto({
         name: req.body.name,
         age: req.body.age
     });

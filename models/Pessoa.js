@@ -8,6 +8,10 @@ const PessoaSchema = new mongoose.Schema({
     cpf: {
         required: true,
         type: String
+    },
+    email: {
+        required: true,
+        type: String
     }
 })
 

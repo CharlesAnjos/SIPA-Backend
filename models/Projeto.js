@@ -2,6 +2,16 @@ const mongoose = require('mongoose');
 const Premio = require('./Premio');
 
 const ProjetoSchema = new mongoose.Schema({
+    premio: {
+        required: true,
+        type: mongoose.Schema.ObjectId,
+        ref: "Premio"
+    },
+    autores: [{
+        required: true,
+        type: mongoose.Schema.ObjectId,
+        ref: "Autor"
+    }],
     titulo: {
         required: true,
         type: String
@@ -13,19 +23,7 @@ const ProjetoSchema = new mongoose.Schema({
     dataEnvio: {
         required: true,
         type: String
-    },
-    area: {
-        required: true,
-        type: String
-    },
-    premio: {
-        required: true,
-        type: Premio
-    },
-    autores: {
-        required: true,
-        type: [Autor]
-    },
+    }
 })
 
 module.exports = mongoose.model('Projeto', ProjetoSchema)
