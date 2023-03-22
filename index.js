@@ -1,4 +1,5 @@
 const premioroutes = require('./routes/premioroutes');
+const etaparoutes = require('./routes/etaparoutes');
 const autorroutes = require('./routes/autorroutes');
 const avaliadorroutes = require('./routes/avaliadorroutes');
 const projetoroutes = require('./routes/projetoroutes');
@@ -21,10 +22,11 @@ database.once('connected', () => {
 const app = express();
 
 app.use(express.json());
-app.use('/api', premioroutes);
-app.use('/api', autorroutes);
-app.use('/api', avaliadorroutes);
-app.use('/api', projetoroutes);
+app.use('/premio', premioroutes);
+app.use('/etapa', etaparoutes);
+app.use('/autor', autorroutes);
+app.use('/projeto', projetoroutes);
+app.use('/avaliador', avaliadorroutes);
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.listen(3000, () => {

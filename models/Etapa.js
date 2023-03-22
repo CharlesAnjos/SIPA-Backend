@@ -8,7 +8,8 @@ const EtapaSchema = new mongoose.Schema({
     },
     premio: {
         required: true,
-        type: Premio
+        type: mongoose.Schema.ObjectId,
+        ref: "Premio",
     },
     dataInicio: {
         required: true,

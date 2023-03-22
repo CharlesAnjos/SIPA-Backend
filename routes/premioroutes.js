@@ -4,12 +4,11 @@ const Premio = require("../models/Premio");
 
 module.exports = router;
 
-//Post Method
-router.post('/premio/novo', async(req, res) => {
+router.post('/novo', async(req, res) => {
     const data = new Premio({
         nome: req.body.nome,
         descricao: req.body.descricao,
-        descricao: req.body.ano,
+        ano: req.body.ano,
         dataInicio: req.body.dataInicio,
         dataFim: req.body.dataFim
     });
@@ -23,8 +22,7 @@ router.post('/premio/novo', async(req, res) => {
     }
 });
 
-//Get all Method
-router.get('/premios/listar', async (req, res) => {
+router.get('/listar', async (req, res) => {
     try {
         var premios = "";
         const data = await Premio.find();
@@ -40,13 +38,12 @@ router.get('/premios/listar', async (req, res) => {
     }
 });
 
-//Get by ID Method
-router.get('/premio/:id', async (req, res) => {
+router.get('/consultar/:id', async (req, res) => {
     try {
         var premio = "";
         const id = req.params.id;
         const data = await Premio.findById(id);
-        premio+=`\n Evento: ${data._id} , Nome: ${data.nome} - ${data.ano}`;
+        premio+=`\n Evento: ${data.nome} - ${data.ano} (${data._id})`;
         premio+=`\n    Descrição: ${data.descricao}`;
         premio+=`\n    Data: de ${data.dataInicio} à ${data.dataFim}`;
         res.send(premio);
@@ -56,31 +53,29 @@ router.get('/premio/:id', async (req, res) => {
     }
 });
 
-//Update by ID Method
-router.patch('/premio/atualizar/:id', async (req, res) => {
+router.patch('/atualizar/:id', async (req, res) => {
 
     try{
         const id = req.params.id;
         const data = await Premio.findByIdAndUpdate(id, {
             nome: req.body.nome,
             descricao: req.body.descricao,
-            descricao: req.body.ano,
+            ano: req.body.ano,
             dataInicio: req.body.dataInicio,
             dataFim: req.body.dataFim
         })
-        res.send(`Evento ${data.nome} - ${data.ano} atualizado!`);
+        res.send(`Evento ${req.body.nome} - ${req.body.ano} atualizado!`);
     }
     catch(error){
         res.status(400).json({message: error.message})
     }
 });
 
-//Delete by ID Method
-router.delete('/premio/deletar/:id', async (req, res) => {
+router.delete('/remover/:id', async (req, res) => {
     try {
         const id = req.params.id;
         const data = await Premio.findByIdAndDelete(id);
-        res.send(`Prêmio ${data.nome} - ${data.ano} has been deleted`);
+        res.send(`Prêmio ${data.nome} - ${data.ano} foi removido!`);
     }
     catch (error) {
         res.status(400).json({message: error.message})
