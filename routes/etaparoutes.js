@@ -1,15 +1,17 @@
 const express = require('express');
 const router = express.Router();
+const Etapa = require("../models/Etapa");
 const Premio = require("../models/Premio");
 
 module.exports = router;
 
-//Post Method
-router.post('/premios/novo', async(req, res) => {
-    const data = new Premio({
+router.post('/nova', async(req, res) => {
+    const data = new Etapa({
         nome: req.body.nome,
+        premio: req.body.premio,
         descricao: req.body.descricao,
-
+        dataInicio: req.body.dataInicio,
+        dataFim: req.body.dataFim
     });
 
     try{
@@ -21,54 +23,63 @@ router.post('/premios/novo', async(req, res) => {
     }
 });
 
-//Get all Method
-router.get('/premios/listar', async (req, res) => {
+router.get('/listar', async (req, res) => {
     try {
-        var users = "";
-        const data = await Model.find();
-        data.forEach(function(user) {
-            users+=`\n ID: ${user._id} , Name: ${user.name}, Age: ${user.age}`;
+        var etapas = "";
+        const data = await Etapa.find();
+        data.forEach(function(etapa) {
+            etapas+=`\n Etapa: ${etapa.nome} (${etapa._id})`;
+            etapas+=`\n    Premio: ${etapa.premio}`;
+            etapas+=`\n    Descrição: ${etapa.descricao}`;
+            etapas+=`\n    Data: de ${etapa.dataInicio} à ${etapa.dataFim}`;
+            etapas+=`\n`;
         });
-        res.send(users);
+        res.send(etapas);
     }
     catch (error) {
         res.status(400).json({message: error.message})
     }
 });
 
-//Get by ID Method
-router.get('/premio/:id', async (req, res) => {
+router.get('/consultar/:id', async (req, res) => {
     try {
+        var etapa = "";
         const id = req.params.id;
-        const data = await Model.findById(id);
-        res.send(`ID: ${data._id} , Name: ${data.name}, Age: ${data.age}`);
+        const data = await Etapa.findById(id);
+        etapa+=`\n Etapa: ${data.nome} (${data._id})`;
+        etapa+=`\n    Premio: ${etapa.premio}`;
+        etapa+=`\n    Descrição: ${data.descricao}`;
+        etapa+=`\n    Data: de ${data.dataInicio} à ${data.dataFim}`;
+        res.send(etapa);
     }
     catch (error) {
         res.status(400).json({message: error.message})
     }
 });
 
-//Update by ID Method
-router.patch('/premio/atualizar/:id', async (req, res) => {
+router.patch('/atualizar/:id', async (req, res) => {
 
     try{
         const id = req.params.id;
-        const data = await Model.findByIdAndUpdate(id, {
-            name: req.body.name, age: req.body.age
+        const data = await Etapa.findByIdAndUpdate(id, {
+            nome: req.body.nome,
+            premio: req.body.premio,
+            descricao: req.body.descricao,
+            dataInicio: req.body.dataInicio,
+            dataFim: req.body.dataFim
         })
-        res.send(`Entry ${data.name}, ${data.age} updated to ${req.body.name}, ${req.body.age}`);
+        res.send(`Etapa ${req.body.nome} atualizada!`);
     }
     catch(error){
         res.status(400).json({message: error.message})
     }
 });
 
-//Delete by ID Method
-router.delete('/premio/deletar/:id', async (req, res) => {
+router.delete('/remover/:id', async (req, res) => {
     try {
         const id = req.params.id;
-        const data = await Model.findByIdAndDelete(id);
-        res.send(`Document with ${data.name} has been deleted`);
+        const data = await Premio.findByIdAndDelete(id);
+        res.send(`Etapa ${data.nome} foi removida!`);
     }
     catch (error) {
         res.status(400).json({message: error.message})
