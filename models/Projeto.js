@@ -4,12 +4,14 @@ const Premio = require('./Premio');
 const ProjetoSchema = new mongoose.Schema({
     premio: {
         required: true,
-        type: Premio
+        type: mongoose.Schema.ObjectId,
+        ref: "Premio"
     },
-    autores: {
+    autores: [{
         required: true,
-        type: [Autor]
-    },
+        type: mongoose.Schema.ObjectId,
+        ref: "Autor"
+    }],
     titulo: {
         required: true,
         type: String

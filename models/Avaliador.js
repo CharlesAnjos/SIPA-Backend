@@ -4,7 +4,8 @@ const Pessoa = require('./Pessoa');
 const AvaliadorSchema = new mongoose.Schema({
     pessoa: {
         required: true,
-        type: Pessoa
+        type: mongoose.Schema.ObjectId,
+        ref: "Pessoa"
     },
     registro: {
         required: true,

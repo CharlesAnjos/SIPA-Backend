@@ -1,14 +1,15 @@
 const express = require('express');
 const router = express.Router();
-const Projeto = require("../models/Projeto");
+const Premio = require("../models/Premio");
 
 module.exports = router;
 
 //Post Method
-router.post('/post', async(req, res) => {
-    const data = new Projeto({
-        name: req.body.name,
-        age: req.body.age
+router.post('/premios/novo', async(req, res) => {
+    const data = new Premio({
+        nome: req.body.nome,
+        descricao: req.body.descricao,
+
     });
 
     try{
@@ -21,7 +22,7 @@ router.post('/post', async(req, res) => {
 });
 
 //Get all Method
-router.get('/getAll', async (req, res) => {
+router.get('/premios/listar', async (req, res) => {
     try {
         var users = "";
         const data = await Model.find();
@@ -36,7 +37,7 @@ router.get('/getAll', async (req, res) => {
 });
 
 //Get by ID Method
-router.get('/getOne/:id', async (req, res) => {
+router.get('/premio/:id', async (req, res) => {
     try {
         const id = req.params.id;
         const data = await Model.findById(id);
@@ -48,7 +49,7 @@ router.get('/getOne/:id', async (req, res) => {
 });
 
 //Update by ID Method
-router.patch('/update/:id', async (req, res) => {
+router.patch('/premio/atualizar/:id', async (req, res) => {
 
     try{
         const id = req.params.id;
@@ -63,7 +64,7 @@ router.patch('/update/:id', async (req, res) => {
 });
 
 //Delete by ID Method
-router.delete('/delete/:id', async (req, res) => {
+router.delete('/premio/deletar/:id', async (req, res) => {
     try {
         const id = req.params.id;
         const data = await Model.findByIdAndDelete(id);

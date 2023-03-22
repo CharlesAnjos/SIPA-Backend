@@ -14,10 +14,11 @@ const PremioSchema = new mongoose.Schema({
         required: true,
         type: String
     },
-    cronograma: {
+    cronograma: [{
         required: true,
-        type: [Etapa]
-    },
+        type: mongoose.Schema.ObjectId,
+        ref: "Etapa"
+    }],
     dataInicio: {
         required: true,
         type: String
