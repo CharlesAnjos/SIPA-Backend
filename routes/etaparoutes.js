@@ -47,7 +47,7 @@ router.get('/consultar/:id', async (req, res) => {
         const id = req.params.id;
         const data = await Etapa.findById(id);
         etapa+=`\n Etapa: ${data.nome} (${data._id})`;
-        etapa+=`\n    Premio: ${etapa.premio}`;
+        etapa+=`\n    Premio: ${data.premio}`;
         etapa+=`\n    Descrição: ${data.descricao}`;
         etapa+=`\n    Data: de ${data.dataInicio} à ${data.dataFim}`;
         res.send(etapa);
@@ -78,7 +78,7 @@ router.patch('/atualizar/:id', async (req, res) => {
 router.delete('/remover/:id', async (req, res) => {
     try {
         const id = req.params.id;
-        const data = await Premio.findByIdAndDelete(id);
+        const data = await Etapa.findByIdAndDelete(id);
         res.send(`Etapa ${data.nome} foi removida!`);
     }
     catch (error) {
