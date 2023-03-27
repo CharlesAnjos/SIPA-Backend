@@ -1,14 +1,14 @@
 const express = require('express');
 const router = express.Router();
-const Model = require("../models/Autor");
+const Autor = require("../models/Autor");
 
 module.exports = router;
 
-//Post Method
-router.post('/post', async(req, res) => {
-    const data = new Model({
-        name: req.body.name,
-        age: req.body.age
+router.post('/nova', async(req, res) => {
+    const data = new Autor({
+        pessoa: req.body.pessoa,
+        registro: req.body.registro,
+        area: req.body.area
     });
 
     try{
@@ -20,54 +20,59 @@ router.post('/post', async(req, res) => {
     }
 });
 
-//Get all Method
-router.get('/getAll', async (req, res) => {
+router.get('/listar', async (req, res) => {
     try {
-        var users = "";
-        const data = await Model.find();
-        data.forEach(function(user) {
-            users+=`\n ID: ${user._id} , Name: ${user.name}, Age: ${user.age}`;
+        var autores = "";
+        const data = await Autor.find();
+        data.forEach(function(autor) {
+            autores+=`\n Autor: ${autor.pessoa} (${autor._id})`;
+            autores+=`\n     CPF: ${autor.registro}`;
+            autores+=`\n     Email: ${autor.area}`;
+            autores+=`\n`;
         });
-        res.send(users);
+        res.send(autores);
     }
     catch (error) {
         res.status(400).json({message: error.message})
     }
 });
 
-//Get by ID Method
-router.get('/getOne/:id', async (req, res) => {
+router.get('/consultar/:id', async (req, res) => {
     try {
+        var autor = "";
         const id = req.params.id;
-        const data = await Model.findById(id);
-        res.send(`ID: ${data._id} , Name: ${data.name}, Age: ${data.age}`);
+        const data = await Autor.findById(id);
+        autor+=`\n Autor: ${data.pessoa} (${data._id})`;
+        autor+=`\n    CPF: ${data.registro}`;
+        autor+=`\n    Email: ${data.area}`;
+        res.send(autor);
     }
     catch (error) {
         res.status(400).json({message: error.message})
     }
 });
 
-//Update by ID Method
-router.patch('/update/:id', async (req, res) => {
+router.patch('/atualizar/:id', async (req, res) => {
 
     try{
         const id = req.params.id;
-        const data = await Model.findByIdAndUpdate(id, {
-            name: req.body.name, age: req.body.age
+        const data = await Autor.findByIdAndUpdate(id, {
+            pessoa: req.body.pessoa,
+            registro: req.body.registro,
+            area: req.body.area
         })
-        res.send(`Entry ${data.name}, ${data.age} updated to ${req.body.name}, ${req.body.age}`);
+        res.send(`Autor ${req.body.pessoa} atualizada!`);
     }
     catch(error){
         res.status(400).json({message: error.message})
     }
 });
 
-//Delete by ID Method
-router.delete('/delete/:id', async (req, res) => {
+router.delete('/remover/:id', async (req, res) => {
     try {
         const id = req.params.id;
-        const data = await Model.findByIdAndDelete(id);
-        res.send(`Document with ${data.name} has been deleted`);
+        const data = await Autor.findByIdAndDelete(id);
+        res.send(`Autor ${data.pessoa} foi removida!`);
     }
     catch (error) {
         res.status(400).json({message: error.message})

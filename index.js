@@ -9,6 +9,7 @@ const pessoaroutes = require('./routes/pessoaroutes');
 const autorroutes = require('./routes/autorroutes');
 const avaliadorroutes = require('./routes/avaliadorroutes');
 const projetoroutes = require('./routes/projetoroutes');
+const avaliacao = require('./routes/avaliacaoroutes');
 
 mongoose.set('strictQuery', false);
 const mongoString = "mongodb://localhost:27017/backend-ntdw"
@@ -30,10 +31,11 @@ app.use('/premio', premioroutes);
 app.use('/etapa', etaparoutes);
 app.use('/pessoa', pessoaroutes);
 //doing
-//to do
 app.use('/autor', autorroutes);
-app.use('/projeto', projetoroutes);
+//to do
 app.use('/avaliador', avaliadorroutes);
+app.use('/projeto', projetoroutes);
+app.use('/projeto', avaliacao);
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.listen(3000, () => {
