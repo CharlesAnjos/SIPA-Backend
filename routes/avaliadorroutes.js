@@ -1,14 +1,14 @@
 const express = require('express');
 const router = express.Router();
-const Model = require("../models/Avaliador");
+const Avaliador = require("../models/Avaliador");
 
 module.exports = router;
 
-//Post Method
-router.post('/post', async(req, res) => {
-    const data = new Model({
-        name: req.body.name,
-        age: req.body.age
+router.post('/novo', async(req, res) => {
+    const data = new Avaliador({
+        pessoa: req.body.pessoa,
+        registro: req.body.registro,
+        area: req.body.area
     });
 
     try{
@@ -20,54 +20,59 @@ router.post('/post', async(req, res) => {
     }
 });
 
-//Get all Method
-router.get('/getAll', async (req, res) => {
+router.get('/listar', async (req, res) => {
     try {
-        var users = "";
-        const data = await Model.find();
-        data.forEach(function(user) {
-            users+=`\n ID: ${user._id} , Name: ${user.name}, Age: ${user.age}`;
+        var avaliadores = "";
+        const data = await Avaliador.find();
+        data.forEach(function(avaliador) {
+            avaliadores+=`\n Avaliador: ${avaliador.pessoa} (${avaliador._id})`;
+            avaliadores+=`\n     Registro: ${avaliador.registro}`;
+            avaliadores+=`\n     Área: ${avaliador.area}`;
+            avaliadores+=`\n`;
         });
-        res.send(users);
+        res.send(avaliadores);
     }
     catch (error) {
         res.status(400).json({message: error.message})
     }
 });
 
-//Get by ID Method
-router.get('/getOne/:id', async (req, res) => {
+router.get('/consultar/:id', async (req, res) => {
     try {
+        var avaliador = "";
         const id = req.params.id;
-        const data = await Model.findById(id);
-        res.send(`ID: ${data._id} , Name: ${data.name}, Age: ${data.age}`);
+        const data = await Avaliador.findById(id);
+        avaliador+=`\n Avaliador: ${data.pessoa} (${data._id})`;
+        avaliador+=`\n    Registro: ${data.registro}`;
+        avaliador+=`\n    Área: ${data.area}`;
+        res.send(avaliador);
     }
     catch (error) {
         res.status(400).json({message: error.message})
     }
 });
 
-//Update by ID Method
-router.patch('/update/:id', async (req, res) => {
+router.patch('/atualizar/:id', async (req, res) => {
 
     try{
         const id = req.params.id;
-        const data = await Model.findByIdAndUpdate(id, {
-            name: req.body.name, age: req.body.age
+        const data = await Avaliador.findByIdAndUpdate(id, {
+            pessoa: req.body.pessoa,
+            registro: req.body.registro,
+            area: req.body.area
         })
-        res.send(`Entry ${data.name}, ${data.age} updated to ${req.body.name}, ${req.body.age}`);
+        res.send(`Avaliador ${req.body.pessoa} atualizado!`);
     }
     catch(error){
         res.status(400).json({message: error.message})
     }
 });
 
-//Delete by ID Method
-router.delete('/delete/:id', async (req, res) => {
+router.delete('/remover/:id', async (req, res) => {
     try {
         const id = req.params.id;
-        const data = await Model.findByIdAndDelete(id);
-        res.send(`Document with ${data.name} has been deleted`);
+        const data = await Avaliador.findByIdAndDelete(id);
+        res.send(`Avaliador ${data.pessoa} foi removido!`);
     }
     catch (error) {
         res.status(400).json({message: error.message})
