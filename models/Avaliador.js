@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const Pessoa = require('./Pessoa');
 
 const AvaliadorSchema = new mongoose.Schema({
     pessoa: {
