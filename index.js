@@ -30,8 +30,8 @@ app.use(express.json());
 app.use('/premio', premioroutes);
 app.use('/etapa', etaparoutes);
 app.use('/pessoa', pessoaroutes);
-//doing
 app.use('/autor', autorroutes);
+//doing
 //to do
 app.use('/avaliador', avaliadorroutes);
 app.use('/projeto', projetoroutes);
