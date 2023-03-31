@@ -7,8 +7,8 @@ const etaparoutes = require('./routes/etaparoutes');
 const pessoaroutes = require('./routes/pessoaroutes');
 const autorroutes = require('./routes/autorroutes');
 const avaliadorroutes = require('./routes/avaliadorroutes');
-
 const projetoroutes = require('./routes/projetoroutes');
+
 const avaliacaoroutes = require('./routes/avaliacaoroutes');
 
 mongoose.set('strictQuery', false);
@@ -32,10 +32,11 @@ app.use('/etapa', etaparoutes);
 app.use('/pessoa', pessoaroutes);
 app.use('/autor', autorroutes);
 app.use('/avaliador', avaliadorroutes);
-//doing
 app.use('/projeto', projetoroutes);
-//to do
+//doing
 app.use('/avaliacao', avaliacaoroutes);
+//to do
+// - consultas customizadas
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.listen(3000, () => {

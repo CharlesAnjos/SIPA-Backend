@@ -1,14 +1,17 @@
 const express = require('express');
+const { ObjectId } = require('mongodb');
 const router = express.Router();
-const Avaliador = require("../models/Avaliador");
+const Avaliacao = require("../models/Avaliacao");
 
 module.exports = router;
 
 router.post('/novo', async(req, res) => {
-    const data = new Avaliador({
-        pessoa: req.body.pessoa,
-        registro: req.body.registro,
-        area: req.body.area
+    const data = new Avaliacao({
+        projeto: req.body.projeto,
+        avaliador: req.body.avaliador,
+        parecer: req.body.parecer,
+        nota: req.body.nota,
+        dataAvaliacao: req.body.dataAvaliacao
     });
 
     try{
@@ -22,15 +25,18 @@ router.post('/novo', async(req, res) => {
 
 router.get('/listar', async (req, res) => {
     try {
-        var avaliadores = "";
-        const data = await Avaliador.find();
-        data.forEach(function(avaliador) {
-            avaliadores+=`\n Avaliador: ${avaliador.pessoa} (${avaliador._id})`;
-            avaliadores+=`\n     Registro: ${avaliador.registro}`;
-            avaliadores+=`\n     Área: ${avaliador.area}`;
-            avaliadores+=`\n`;
+        var avaliacoes = "";
+        const data = await Avaliacao.find();
+        data.forEach(function(avaliacao) {
+            avaliacoes+=`\n Avaliacao: (${avaliacao._id})`;
+            avaliacoes+=`\n    Avaliador: ${avaliacao.avaliador}`;
+            avaliacoes+=`\n    Projeto: ${avaliacao.projeto}`;
+            avaliacoes+=`\n    Nota: ${avaliacao.nota}`;
+            avaliacoes+=`\n    Parecer: ${avaliacao.parecer}`;
+            avaliacoes+=`\n    Data da Avaliação: ${avaliacao.dataAvaliacao}`;
+            avaliacoes+=`\n`;
         });
-        res.send(avaliadores);
+        res.send(avaliacoes);
     }
     catch (error) {
         res.status(400).json({message: error.message})
@@ -39,13 +45,17 @@ router.get('/listar', async (req, res) => {
 
 router.get('/consultar/:id', async (req, res) => {
     try {
-        var avaliador = "";
+        var avaliacao = "";
         const id = req.params.id;
-        const data = await Avaliador.findById(id);
-        avaliador+=`\n Avaliador: ${data.pessoa} (${data._id})`;
-        avaliador+=`\n    Registro: ${data.registro}`;
-        avaliador+=`\n    Área: ${data.area}`;
-        res.send(avaliador);
+        const data = await Avaliacao.findById(id);
+        avaliacao+=`\n Avaliacao: (${data._id})`;
+        avaliacao+=`\n    Avaliador: ${data.avaliador}`;
+        avaliacao+=`\n    Projeto: ${data.projeto}`;
+        avaliacao+=`\n    Nota: ${data.nota}`;
+        avaliacao+=`\n    Parecer: ${data.parecer}`;
+        avaliacao+=`\n    Data da Avaliação: ${data.dataAvaliacao}`;
+        avaliacao+=`\n`;
+        res.send(avaliacao);
     }
     catch (error) {
         res.status(400).json({message: error.message})
@@ -56,12 +66,14 @@ router.patch('/atualizar/:id', async (req, res) => {
 
     try{
         const id = req.params.id;
-        const data = await Avaliador.findByIdAndUpdate(id, {
-            pessoa: req.body.pessoa,
-            registro: req.body.registro,
-            area: req.body.area
+        const data = await Avaliacao.findByIdAndUpdate(id, {
+            avaliador: req.body.avaliador,
+            projeto: req.body.projeto,
+            parecer: req.body.parecer,
+            nota: req.body.nota,
+            dataAvaliacao: req.body.dataAvaliacao
         })
-        res.send(`Avaliador ${req.body.pessoa} atualizado!`);
+        res.send(`Avaliacao ${req.params.id} atualizada!`);
     }
     catch(error){
         res.status(400).json({message: error.message})
@@ -71,8 +83,8 @@ router.patch('/atualizar/:id', async (req, res) => {
 router.delete('/remover/:id', async (req, res) => {
     try {
         const id = req.params.id;
-        const data = await Avaliador.findByIdAndDelete(id);
-        res.send(`Avaliador ${data.pessoa} foi removido!`);
+        const data = await Avaliacao.findByIdAndDelete(id);
+        res.send(`Avaliacao ${data._id} foi removida!`);
     }
     catch (error) {
         res.status(400).json({message: error.message})
