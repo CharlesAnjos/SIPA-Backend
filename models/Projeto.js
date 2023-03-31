@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const Premio = require('./Premio');
 
 const ProjetoSchema = new mongoose.Schema({
     premio: {

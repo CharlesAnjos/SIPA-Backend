@@ -1,14 +1,17 @@
 const express = require('express');
+const { ObjectId } = require('mongodb');
 const router = express.Router();
 const Projeto = require("../models/Projeto");
 
 module.exports = router;
 
-//Post Method
-router.post('/post', async(req, res) => {
+router.post('/novo', async(req, res) => {
     const data = new Projeto({
-        name: req.body.name,
-        age: req.body.age
+        premio: req.body.premio,
+        autores: req.body.autores,
+        titulo: req.body.titulo,
+        resumo: req.body.resumo,
+        dataEnvio: req.body.dataEnvio
     });
 
     try{
@@ -20,54 +23,66 @@ router.post('/post', async(req, res) => {
     }
 });
 
-//Get all Method
-router.get('/getAll', async (req, res) => {
+router.get('/listar', async (req, res) => {
     try {
-        var users = "";
-        const data = await Model.find();
-        data.forEach(function(user) {
-            users+=`\n ID: ${user._id} , Name: ${user.name}, Age: ${user.age}`;
+        var projetos = "";
+        const data = await Projeto.find();
+        data.forEach(function(projeto) {
+            projetos+=`\n Projeto: ${projeto.titulo} (${projeto._id})`;
+            projetos+=`\n    Autores: ${projeto.autores}`;
+            projetos+=`\n    Premio: ${projeto.premio}`;
+            projetos+=`\n    Resumo: ${projeto.resumo}`;
+            projetos+=`\n    Data do Envio: ${projeto.dataEnvio}`;
+            projetos+=`\n`;
         });
-        res.send(users);
+        res.send(projetos);
     }
     catch (error) {
         res.status(400).json({message: error.message})
     }
 });
 
-//Get by ID Method
-router.get('/getOne/:id', async (req, res) => {
+router.get('/consultar/:id', async (req, res) => {
     try {
+        var projeto = "";
         const id = req.params.id;
-        const data = await Model.findById(id);
-        res.send(`ID: ${data._id} , Name: ${data.name}, Age: ${data.age}`);
+        const data = await Projeto.findById(id);
+        projeto+=`\n Projeto: ${data.titulo} (${data._id})`;
+        projeto+=`\n    Autores: ${data.autores}`;
+        projeto+=`\n    Premio: ${data.premio}`;
+        projeto+=`\n    Resumo: ${data.resumo}`;
+        projeto+=`\n    Data do Envio: ${data.dataEnvio}`;
+        projeto+=`\n`;
+        res.send(projeto);
     }
     catch (error) {
         res.status(400).json({message: error.message})
     }
 });
 
-//Update by ID Method
-router.patch('/update/:id', async (req, res) => {
+router.patch('/atualizar/:id', async (req, res) => {
 
     try{
         const id = req.params.id;
-        const data = await Model.findByIdAndUpdate(id, {
-            name: req.body.name, age: req.body.age
+        const data = await Projeto.findByIdAndUpdate(id, {
+            autores: req.body.autores,
+            premio: req.body.premio,
+            titulo: req.body.titulo,
+            resumo: req.body.resumo,
+            dataEnvio: req.body.dataEnvio
         })
-        res.send(`Entry ${data.name}, ${data.age} updated to ${req.body.name}, ${req.body.age}`);
+        res.send(`Projeto ${req.body.titulo} atualizado!`);
     }
     catch(error){
         res.status(400).json({message: error.message})
     }
 });
 
-//Delete by ID Method
-router.delete('/delete/:id', async (req, res) => {
+router.delete('/remover/:id', async (req, res) => {
     try {
         const id = req.params.id;
-        const data = await Model.findByIdAndDelete(id);
-        res.send(`Document with ${data.name} has been deleted`);
+        const data = await Projeto.findByIdAndDelete(id);
+        res.send(`Projeto ${data.titulo} foi removido!`);
     }
     catch (error) {
         res.status(400).json({message: error.message})
