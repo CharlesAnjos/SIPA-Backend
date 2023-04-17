@@ -50,20 +50,38 @@ router.get('/projetosavaliados', async (req, res) => {
     }
 });
 
-router.get('/consultar/:id', async (req, res) => {
+router.get('/projetosvencedores', async (req, res) => {
     try {
-        var autor = "";
-        const id = req.params.id;
-        const data = await Autor.findById(id);
-        autor+=`\n Autor: ${data.pessoa} (${data._id})`;
-        autor+=`\n    Registro: ${data.registro}`;
-        autor+=`\n    Área: ${data.area}`;
-        res.send(autor);
+        const premios = await getProjetosVencedores();
+        res.send(premios).json;
     }
     catch (error) {
         res.status(400).json({message: error.message})
     }
 });
+
+async function getProjetosVencedores(){
+    var premios = null;
+    try {
+        premios = await Premio.aggregate([
+            {
+                $lookup: {
+                    from: Projeto.collection.name,
+                    localField: '_id',
+                    foreignField: 'premio',
+                    as: 'projetoVencedor'
+                }
+            },
+            {
+                $unwind: "$projetoVencedor"
+            },
+        ]);
+    }
+    catch (error) {
+        console.log(error);
+    }
+    return premios;
+};
 
 async function getProjetosNaoAvaliados(){
     var projetos = null;
