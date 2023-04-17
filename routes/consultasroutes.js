@@ -4,6 +4,7 @@ const Autor = require("../models/Autor");
 const Projeto = require("../models/Projeto");
 const Pessoa = require("../models/Pessoa");
 const Premio = require("../models/Premio");
+const Avaliacao = require("../models/Avaliacao")
 
 
 module.exports = router;
@@ -11,7 +12,7 @@ module.exports = router;
 router.get('/projetosautores', async (req, res) => {
     const projetos = await getProjetosAutores();
     try {
-        res.send(projetos)
+        res.send(projetos).json
     }
     catch (error) {
         res.status(400).json({message: error.message})
@@ -21,7 +22,7 @@ router.get('/projetosautores', async (req, res) => {
 router.get('/autoresprojetos', async (req, res) => {
     const autores = await getAutoresProjetos();
     try {
-        res.send(autores)
+        res.send(autores).json
     }
     catch (error) {
         res.status(400).json({message: error.message})
@@ -29,9 +30,18 @@ router.get('/autoresprojetos', async (req, res) => {
 });
 
 router.get('/projetosnaoavaliados', async (req, res) => {
-    const projetos = await getProjetosNaoAvaliados();
+    //var projetossemavaliacao = null;
     try {
-        res.send(projetos)
+        const projetos = await getProjetosSemAvaliacao();
+        /*
+        projetos.forEach(function (projeto) {
+            console.log(projeto.avaliacao);
+            if (projeto.avaliacao == null) {
+                projetossemavaliacao.append(projeto);
+            }
+        });
+        */
+        res.send(projetos).json;
     }
     catch (error) {
         res.status(400).json({message: error.message})
@@ -53,11 +63,75 @@ router.get('/consultar/:id', async (req, res) => {
     }
 });
 
-async function getProjetosNaoAvaliados(){
+async function getProjetosSemAvaliacao(){
     var projetos = null;
     try {
         projetos = await Projeto.aggregate([
             {
+                $lookup: {
+                    from: Avaliacao.collection.name,
+                    localField: '_id',
+                    foreignField: 'projeto',
+                    as: 'avaliacao'
+                }
+            },
+            {
+                $match: {"avaliacao":[]}
+            },{
+                $lookup: {
+                    from: Premio.collection.name,
+                    localField: 'premio',
+                    foreignField: '_id',
+                    as: 'premio'
+                }
+            },
+            {
+                $unwind: "$premio"
+            },{
+                $lookup: {
+                    from: Autor.collection.name,
+                    localField: 'autores',
+                    foreignField: '_id',
+                    as: 'autores'
+                }
+            },
+            {
+                $unwind: "$autores"
+            },
+            {
+                $lookup: {
+                    from: Pessoa.collection.name,
+                    localField: 'autores.pessoa',
+                    foreignField: '_id',
+                    as: 'autores.pessoa'
+                },
+            },
+            {
+                $unwind: "$autores.pessoa"
+            },
+        ]);
+    }
+    catch (error) {
+        console.log(error);
+    }
+    return projetos;
+};
+
+async function getProjetosAvaliacoes(){
+    var projetos = null;
+    try {
+        projetos = await Projeto.aggregate([
+            {
+                $lookup: {
+                    from: Avaliacao.collection.name,
+                    localField: '_id',
+                    foreignField: 'projeto',
+                    as: 'avaliacao'
+                }
+            },
+            {
+                $unwind: "$avaliacao"
+            },{
                 $lookup: {
                     from: Premio.collection.name,
                     localField: 'premio',
