@@ -4,7 +4,8 @@ const Autor = require("../models/Autor");
 const Projeto = require("../models/Projeto");
 const Pessoa = require("../models/Pessoa");
 const Premio = require("../models/Premio");
-const Avaliacao = require("../models/Avaliacao")
+const Avaliacao = require("../models/Avaliacao");
+const Avaliador = require("../models/Avaliador");
 
 
 module.exports = router;
@@ -30,17 +31,18 @@ router.get('/autoresprojetos', async (req, res) => {
 });
 
 router.get('/projetosnaoavaliados', async (req, res) => {
-    //var projetossemavaliacao = null;
     try {
-        const projetos = await getProjetosSemAvaliacao();
-        /*
-        projetos.forEach(function (projeto) {
-            console.log(projeto.avaliacao);
-            if (projeto.avaliacao == null) {
-                projetossemavaliacao.append(projeto);
-            }
-        });
-        */
+        const projetos = await getProjetosNaoAvaliados();
+        res.send(projetos).json;
+    }
+    catch (error) {
+        res.status(400).json({message: error.message})
+    }
+});
+
+router.get('/projetosavaliados', async (req, res) => {
+    try {
+        const projetos = await getProjetosAvaliados();
         res.send(projetos).json;
     }
     catch (error) {
@@ -63,7 +65,7 @@ router.get('/consultar/:id', async (req, res) => {
     }
 });
 
-async function getProjetosSemAvaliacao(){
+async function getProjetosNaoAvaliados(){
     var projetos = null;
     try {
         projetos = await Projeto.aggregate([
@@ -117,7 +119,7 @@ async function getProjetosSemAvaliacao(){
     return projetos;
 };
 
-async function getProjetosAvaliacoes(){
+async function getProjetosAvaliados(){
     var projetos = null;
     try {
         projetos = await Projeto.aggregate([
@@ -162,6 +164,26 @@ async function getProjetosAvaliacoes(){
             },
             {
                 $unwind: "$autores.pessoa"
+            },{
+                $lookup: {
+                    from: Avaliador.collection.name,
+                    localField: 'avaliacao.avaliador',
+                    foreignField: '_id',
+                    as: 'avaliacao.avaliador'
+                }
+            },
+            {
+                $unwind: "$avaliacao.avaliador"
+            },{
+                $lookup: {
+                    from: Pessoa.collection.name,
+                    localField: 'avaliacao.avaliador.pessoa',
+                    foreignField: '_id',
+                    as: 'avaliacao.avaliador.pessoa'
+                },
+            },
+            {
+                $unwind: "$avaliacao.avaliador.pessoa"
             },
         ]);
     }
