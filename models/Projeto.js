@@ -23,6 +23,6 @@ const ProjetoSchema = new mongoose.Schema({
         required: true,
         type: String
     }
-})
+},{collection:'projetos'})
 
 module.exports = mongoose.model('Projeto', ProjetoSchema)

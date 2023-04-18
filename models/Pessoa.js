@@ -13,6 +13,6 @@ const PessoaSchema = new mongoose.Schema({
         required: true,
         type: String
     }
-})
+},{collection:'pessoas'})
 
 module.exports = mongoose.model('Pessoa', PessoaSchema)

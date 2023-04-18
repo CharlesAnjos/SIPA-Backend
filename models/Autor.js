@@ -14,6 +14,6 @@ const AutorSchema = new mongoose.Schema({
         required: true,
         type: String
     }
-})
+},{collection:'autores'});
 
 module.exports = mongoose.model('Autor', AutorSchema)

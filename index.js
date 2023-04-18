@@ -9,6 +9,7 @@ const autorroutes = require('./routes/autorroutes');
 const avaliadorroutes = require('./routes/avaliadorroutes');
 const projetoroutes = require('./routes/projetoroutes');
 const avaliacaoroutes = require('./routes/avaliacaoroutes');
+const consultasroutes = require('./routes/consultasroutes');
 
 mongoose.set('strictQuery', false);
 const mongoString = "mongodb://localhost:27017/backend-ntdw"
@@ -33,6 +34,7 @@ app.use('/autor', autorroutes);
 app.use('/avaliador', avaliadorroutes);
 app.use('/projeto', projetoroutes);
 app.use('/avaliacao', avaliacaoroutes);
+app.use('/consultas', consultasroutes);
 //doing
 //to do
 // - consultas customizadas
