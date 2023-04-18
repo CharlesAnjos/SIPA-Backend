@@ -69,11 +69,28 @@ async function getProjetosVencedores(){
                     from: Projeto.collection.name,
                     localField: '_id',
                     foreignField: 'premio',
-                    as: 'projetoVencedor'
-                }
+                    as: 'projetoVencedor',
+                },
             },
             {
                 $unwind: "$projetoVencedor"
+            },
+            {
+                $lookup: {
+                    from: Avaliacao.collection.name,
+                    localField: 'projetoVencedor._id',
+                    foreignField: 'projeto',
+                    as: 'projetoVencedor.avaliacao'
+                }
+            },
+            {
+                $unwind: "$projetoVencedor.avaliacao"
+            },
+            {
+                $sort: {"projetoVencedor.avaliacao.nota":-1}
+            },
+            {
+                $limit: 1
             },
         ]);
     }
