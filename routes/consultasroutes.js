@@ -80,7 +80,8 @@ async function getProjetosVencedores(){
                     from: Avaliacao.collection.name,
                     localField: 'projetoVencedor._id',
                     foreignField: 'projeto',
-                    as: 'projetoVencedor.avaliacao'
+                    as: 'projetoVencedor.avaliacao',
+                    
                 }
             },
             {
