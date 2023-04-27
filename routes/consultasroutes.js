@@ -7,7 +7,6 @@ const Premio = require("../models/Premio");
 const Avaliacao = require("../models/Avaliacao");
 const Avaliador = require("../models/Avaliador");
 
-
 module.exports = router;
 
 router.get('/projetosautores', async (req, res) => {
