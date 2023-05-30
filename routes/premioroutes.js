@@ -24,14 +24,13 @@ router.post('/novo', async(req, res) => {
 
 router.get('/listar', async (req, res) => {
     try {
-        var premios = "";
         const data = await Premio.find();
-        data.forEach(function(premio) {
-            premios+=`\n Evento: ${premio.nome} - ${premio.ano} (${premio._id})`;
-            premios+=`\n    Descrição: ${premio.descricao}`;
-            premios+=`\n    Data: de ${premio.dataInicio} à ${premio.dataFim}`;
-        });
-        res.send(premios);
+        // data.forEach(function(premio) {
+        //     premios+=`\n Evento: ${premio.nome} - ${premio.ano} (${premio._id})`;
+        //     premios+=`\n    Descrição: ${premio.descricao}`;
+        //     premios+=`\n    Data: de ${premio.dataInicio} à ${premio.dataFim}`;
+        // });
+        res.send(data);
     }
     catch (error) {
         res.status(400).json({message: error.message})
@@ -40,13 +39,9 @@ router.get('/listar', async (req, res) => {
 
 router.get('/consultar/:id', async (req, res) => {
     try {
-        var premio = "";
         const id = req.params.id;
         const data = await Premio.findById(id);
-        premio+=`\n Evento: ${data.nome} - ${data.ano} (${data._id})`;
-        premio+=`\n    Descrição: ${data.descricao}`;
-        premio+=`\n    Data: de ${data.dataInicio} à ${data.dataFim}`;
-        res.send(premio);
+        res.send(data);
     }
     catch (error) {
         res.status(400).json({message: error.message})

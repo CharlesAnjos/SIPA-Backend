@@ -4,7 +4,7 @@ const Pessoa = require("../models/Pessoa");
 
 module.exports = router;
 
-router.post('/nova', async(req, res) => {
+router.post('/novo', async(req, res) => {
     const data = new Pessoa({
         nome: req.body.nome,
         cpf: req.body.cpf,
@@ -24,13 +24,7 @@ router.get('/listar', async (req, res) => {
     try {
         var pessoas = "";
         const data = await Pessoa.find();
-        data.forEach(function(pessoa) {
-            pessoas+=`\n Pessoa: ${pessoa.nome} (${pessoa._id})`;
-            pessoas+=`\n     CPF: ${pessoa.cpf}`;
-            pessoas+=`\n     Email: ${pessoa.email}`;
-            pessoas+=`\n`;
-        });
-        res.send(pessoas);
+        res.send(data);
     }
     catch (error) {
         res.status(400).json({message: error.message})
@@ -39,13 +33,9 @@ router.get('/listar', async (req, res) => {
 
 router.get('/consultar/:id', async (req, res) => {
     try {
-        var pessoa = "";
         const id = req.params.id;
         const data = await Pessoa.findById(id);
-        pessoa+=`\n Pessoa: ${data.nome} (${data._id})`;
-        pessoa+=`\n    CPF: ${data.cpf}`;
-        pessoa+=`\n    Email: ${data.email}`;
-        res.send(pessoa);
+        res.send(data);
     }
     catch (error) {
         res.status(400).json({message: error.message})
