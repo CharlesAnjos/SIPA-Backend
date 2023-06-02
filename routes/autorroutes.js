@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Autor = require("../models/Autor");
+const Pessoa = require("../models/Pessoa");
 
 module.exports = router;
 
@@ -22,15 +23,8 @@ router.post('/novo', async(req, res) => {
 
 router.get('/listar', async (req, res) => {
     try {
-        var autores = "";
-        const data = await Autor.find();
-        data.forEach(function(autor) {
-            autores+=`\n Autor: ${autor.pessoa} (${autor._id})`;
-            autores+=`\n     Registro: ${autor.registro}`;
-            autores+=`\n     Área: ${autor.area}`;
-            autores+=`\n`;
-        });
-        res.send(autores);
+        const data = await getAutoresPessoas();
+        res.send(data);
     }
     catch (error) {
         res.status(400).json({message: error.message})
@@ -78,3 +72,70 @@ router.delete('/remover/:id', async (req, res) => {
         res.status(400).json({message: error.message})
     }
 });
+
+async function getProjetosAutores(){
+    var projetos = null;
+    try {
+        projetos = await Projeto.aggregate([
+            {
+                $lookup: {
+                    from: Premio.collection.name,
+                    localField: 'premio',
+                    foreignField: '_id',
+                    as: 'premio'
+                }
+            },
+            {
+                $unwind: "$premio"
+            },{
+                $lookup: {
+                    from: Autor.collection.name,
+                    localField: 'autores',
+                    foreignField: '_id',
+                    as: 'autores'
+                }
+            },
+            {
+                $unwind: "$autores"
+            },
+            {
+                $lookup: {
+                    from: Pessoa.collection.name,
+                    localField: 'autores.pessoa',
+                    foreignField: '_id',
+                    as: 'autores.pessoa'
+                },
+            },
+            {
+                $unwind: "$autores.pessoa"
+            },
+        ]);
+    }
+    catch (error) {
+        console.log(error);
+    }
+    return projetos;
+};
+
+async function getAutoresPessoas(){
+    var autores = null;
+    try {
+        autores = await Autor.aggregate([
+            {
+                $lookup: {
+                    from: Pessoa.collection.name,
+                    localField: 'pessoa',
+                    foreignField: '_id',
+                    as: 'pessoa'
+                },
+            },
+            {
+                $unwind: "$pessoa"
+            }
+        ]);
+    }
+    catch (error) {
+        console.log(error);
+    }
+    return autores;
+};
