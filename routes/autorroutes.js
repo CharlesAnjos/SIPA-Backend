@@ -2,19 +2,30 @@ const express = require('express');
 const router = express.Router();
 const Autor = require("../models/Autor");
 const Pessoa = require("../models/Pessoa");
+const mongoose = require('mongoose');
 
 module.exports = router;
 
 router.post('/novo', async(req, res) => {
-    const data = new Autor({
-        pessoa: req.body.pessoa,
-        registro: req.body.registro,
-        area: req.body.area
+    const pessoa = new Pessoa({
+        nome: req.body.pessoa.nome,
+        cpf: req.body.pessoa.cpf,
+        email: req.body.pessoa.email
     });
-
     try{
-        const dataToSave = await data.save();
-        res.status(200).json(dataToSave)
+        const pessoaToSave = await pessoa.save();
+        const data = new Autor({
+            pessoa: pessoaToSave,
+            registro: req.body.registro,
+            area: req.body.area
+        });
+        try{
+            const dataToSave = await data.save();
+            res.status(200).json(dataToSave)
+        }
+        catch(error){
+            res.status(400).json({message: error.message})
+        }
     }
     catch(error){
         res.status(400).json({message: error.message})
@@ -33,13 +44,9 @@ router.get('/listar', async (req, res) => {
 
 router.get('/consultar/:id', async (req, res) => {
     try {
-        var autor = "";
         const id = req.params.id;
-        const data = await Autor.findById(id);
-        autor+=`\n Autor: ${data.pessoa} (${data._id})`;
-        autor+=`\n    Registro: ${data.registro}`;
-        autor+=`\n    Área: ${data.area}`;
-        res.send(autor);
+        const data = await getAutorPessoa(id);
+        res.send(data);
     }
     catch (error) {
         res.status(400).json({message: error.message})
@@ -47,26 +54,37 @@ router.get('/consultar/:id', async (req, res) => {
 });
 
 router.patch('/atualizar/:id', async (req, res) => {
-
     try{
-        const id = req.params.id;
-        const data = await Autor.findByIdAndUpdate(id, {
-            pessoa: req.body.pessoa,
-            registro: req.body.registro,
-            area: req.body.area
-        })
-        res.send(`Autor ${req.body.pessoa} atualizado!`);
+        const aid = req.params.id;
+        const pid = req.body.pessoa.id;
+        const pessoaData = await Pessoa.findByIdAndUpdate(pid, {
+            nome: req.body.pessoa.nome,
+            cpf: req.body.pessoa.cpf,
+            email: req.body.pessoa.email
+        });
+        try{
+            const autorData = await Autor.findByIdAndUpdate(aid, {
+                pessoa: pessoaData,
+                registro: req.body.registro,
+                area: req.body.area
+            });
+            res.send(autorData);
+        }
+        catch(error){
+            res.status(400).json({message: error.message});
+        }
     }
     catch(error){
-        res.status(400).json({message: error.message})
+        res.status(400).json({message: error.message});
     }
 });
 
 router.delete('/remover/:id', async (req, res) => {
     try {
         const id = req.params.id;
-        const data = await Autor.findByIdAndDelete(id);
-        res.send(`Autor ${data.pessoa} foi removido!`);
+        const autorData = await Autor.findByIdAndDelete(id);
+        const pessoaData = await Pessoa.findByIdAndDelete(autorData.pessoa._id);
+        res.send(`autor removido:\n${autorData}`);
     }
     catch (error) {
         res.status(400).json({message: error.message})
@@ -138,4 +156,30 @@ async function getAutoresPessoas(){
         console.log(error);
     }
     return autores;
+};
+
+async function getAutorPessoa(id){
+    var autor = null;
+    try {
+        autor = await Autor.aggregate([
+            {
+                $match: { "_id": mongoose.Types.ObjectId(id)},
+            },
+            {
+                $lookup: {
+                    from: Pessoa.collection.name,
+                    localField: 'pessoa',
+                    foreignField: '_id',
+                    as: 'pessoa'
+                },
+            },
+            {
+                $unwind: "$pessoa"
+            }
+        ]);
+    }
+    catch (error) {
+        console.log(error);
+    }
+    return autor;
 };
