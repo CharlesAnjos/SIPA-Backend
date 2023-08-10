@@ -2,6 +2,8 @@ const express = require('express');
 const { ObjectId } = require('mongodb');
 const router = express.Router();
 const Projeto = require("../models/Projeto");
+const Premio = require("../models/Premio");
+const mongoose = require('mongoose');
 
 module.exports = router;
 
@@ -25,17 +27,19 @@ router.post('/novo', async(req, res) => {
 
 router.get('/listar', async (req, res) => {
     try {
-        var projetos = "";
         const data = await Projeto.find();
-        data.forEach(function(projeto) {
-            projetos+=`\n Projeto: ${projeto.titulo} (${projeto._id})`;
-            projetos+=`\n    Autores: ${projeto.autores}`;
-            projetos+=`\n    Premio: ${projeto.premio}`;
-            projetos+=`\n    Resumo: ${projeto.resumo}`;
-            projetos+=`\n    Data do Envio: ${projeto.dataEnvio}`;
-            projetos+=`\n`;
-        });
-        res.send(projetos);
+        res.send(data);
+    }
+    catch (error) {
+        res.status(400).json({message: error.message})
+    }
+});
+
+router.get('/listar/:projetoid', async (req, res) => {
+    try {
+        const projetoid = req.params.projetoid;
+        const data = await getProjetosFromPremio(projetoid);
+        res.send(data);
     }
     catch (error) {
         res.status(400).json({message: error.message})
@@ -44,16 +48,9 @@ router.get('/listar', async (req, res) => {
 
 router.get('/consultar/:id', async (req, res) => {
     try {
-        var projeto = "";
         const id = req.params.id;
         const data = await Projeto.findById(id);
-        projeto+=`\n Projeto: ${data.titulo} (${data._id})`;
-        projeto+=`\n    Autores: ${data.autores}`;
-        projeto+=`\n    Premio: ${data.premio}`;
-        projeto+=`\n    Resumo: ${data.resumo}`;
-        projeto+=`\n    Data do Envio: ${data.dataEnvio}`;
-        projeto+=`\n`;
-        res.send(projeto);
+        res.send(data);
     }
     catch (error) {
         res.status(400).json({message: error.message})
@@ -88,3 +85,29 @@ router.delete('/remover/:id', async (req, res) => {
         res.status(400).json({message: error.message})
     }
 });
+
+async function getProjetosFromPremio(premio_id){
+    var projetos = null;
+    try {
+        projetos = await Projeto.aggregate([
+            {
+                $match: { "premio": mongoose.Types.ObjectId(premio_id)},
+            },
+            {
+                $lookup: {
+                    from: Premio.collection.name,
+                    localField: 'premio',
+                    foreignField: '_id',
+                    as: 'premio'
+                },
+            },
+            {
+                $unwind: "$premio"
+            }
+        ]);
+    }
+    catch (error) {
+        console.log(error);
+    }
+    return projetos;
+};
