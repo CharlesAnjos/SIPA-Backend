@@ -1,6 +1,8 @@
 # Sobre o projeto
 
-Este é um servidor API para uma atividade da minha graduação.
+Este projeto encerra o backend de um Sistema de Inscrição de Projetos Acadêmicos. Este sistema foi criado como atividade avaliativa para a disciplina de Novas Tecnologias de Desenvolvimento Web, sob supervisão do professor Marinaldo Oliveira do curso de Sistemas para Internet do Instituto Federal de Ciência e Tecnologia do Tocantins - IFTO
+
+Também faz parte desse sistema um outro projeto, consistindo em frontend feito em Flutter ([SIPA-Frontend](https://github.com/CharlesAnjos/SIPA-Frontend)), que acessa os dados do servidor deste projeto via API. Para tanto, este servidor disponibiliza uma API restful para que o frontend já desenvolvido mencionado anteriormente (ou qualquer outro frontend devidamente configurado) possa consultar e cadastrar Projetos Acadêmicos.
 
 # Instruções
 
