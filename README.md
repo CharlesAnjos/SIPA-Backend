@@ -1,37 +1,31 @@
-# Instruções configuração backend
+# Sobre o projeto
 
-## 1. Instalar nodejs e npm
+Este é um servidor API para uma atividade de 
 
-Instale os pacotes nodejs e npm no seu ambiente de desenvolvimento. Isso varia de acordo com o sistema operacional sendo utilizado no mesmo.
+# Instruções
 
-### 1.2. Checar instalação
+## 1. Pré-requisitos e dependências
 
-    $ node -v
-    $ npm -v
+Este projeto tem os seguintes pré-requisitos e dependências:
 
-## 2. Baixar o projeto do github
+    nodejs
+    npm
+    mongodb
+    express
+    mongoose
 
-## 3. Instalar pacote de banco de dados do node
+Os detalhes dos requisitos para este projeto podem ser encontrados no arquivo [enunciado-atividade.pdf](enunciado-atividade.pdf)
 
-### 3.1 Critérios de escolha do BD
+## 2. Banco de dados
 
-Como já tenho bastante experiência com BDs relacionais, decidi fazer este projeto com um não-relacional. Destes, escolhi mongodb por ser o mais comumente usado em projetos node
+O banco de dados utilizado é o MongoDB. Você pode usar uma instância do banco local ou via docker. O jeito mais rápido é via Docker, apenas siga as instruções abaixo:
 
-### 3.2 Instalar o pacote de banco de dados no node
-
-    npm install mongodb
-
-## 4. Configurar o BD
-
-Docker MongoDB
-
-### 4.1 Instalação
+### 2.1 Instalação
     # docker run -d -p 27017:27017 --name backend-ntdw mongo:latest
 
-### 4.2 Execução
+### 2.2 Execução
     # docker start backend-ntdw
 
-## 5. Inicializar serviço backend
+## 3. Inicializar serviço backend
 
-Na pasta do projeto iniciar o serviço com 
-    npm start
+Inicie o serviço backend através da execução do script [startserver.sh](startserver.sh). Pode ser necessário dar permissão de execução para este script.
