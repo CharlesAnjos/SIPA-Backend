@@ -1,17 +1,15 @@
 # Instruções configuração backend
 
 ## 1. Instalar nodejs e npm
-    # pacman -S nodejs npm
+
+Instale os pacotes nodejs e npm no seu ambiente de desenvolvimento. Isso varia de acordo com o sistema operacional sendo utilizado no mesmo.
 
 ### 1.2. Checar instalação
+
     $ node -v
     $ npm -v
 
-## 2. Inicializar projeto node
-    $ mkdir backend && cd backend
-    $ npm init
-
-    preencher dados do pacote note
+## 2. Baixar o projeto do github
 
 ## 3. Instalar pacote de banco de dados do node
 
@@ -33,8 +31,7 @@ Docker MongoDB
 ### 4.2 Execução
     # docker start backend-ntdw
 
-## 5. Fazer o resto da implementação
-- Estou usando o tutorial localizado em https://www.freecodecamp.org/news/build-a-restful-api-using-node-express-and-mongodb/ para o resto do trabalho
+## 5. Inicializar serviço backend
 
-### 5.1 Notas sobre implementação
-- dotenv resolveu não funcionar, então ignorei ele
+Na pasta do projeto iniciar o serviço com 
+    npm start
