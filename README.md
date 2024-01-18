@@ -1,6 +1,6 @@
 # Sobre o projeto
 
-Este é um servidor API para uma atividade de 
+Este é um servidor API para uma atividade da minha graduação.
 
 # Instruções
 
